@@ -9,13 +9,15 @@ use crate::{
 };
 
 pub async fn run_orderbook(mut receiver: Receiver<OrderCommand>) {
-    // The processor owns the matching engine.
-    //         |
-    //        And
-    //         |
-    // The engine owns:
-    // 1. OrderBook
-    // 2. MatchingStrategy
+
+                    // The processor owns the matching engine.
+                    //         |
+                    //        And
+                    //         |
+                    //  The engine owns:
+                    // 1. OrderBook
+                    // 2. MatchingStrategy
+                        
     let mut engine = MatchingEngine::new(
         Box::new(PriceTimeStrategy)
     );
@@ -25,7 +27,7 @@ pub async fn run_orderbook(mut receiver: Receiver<OrderCommand>) {
            OrderCommand::Add {
     order,
     response,
-} => {
+  } => {
     let result = engine.process_order(order);
 
     match result {

@@ -10,3 +10,11 @@ serde_json = "1.0.151"
 tokio = { version = "1.53.1", features = ["full"] }
 tokio-tungstenite = "0.30.0"
 thiserror = "2"
+
+[dev-dependencies]
+criterion = "0.5"
+
+[[bench]]
+name = "orderbook_benchmark"
+harness = false
+
