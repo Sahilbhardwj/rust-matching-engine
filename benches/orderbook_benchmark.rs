@@ -1,6 +1,6 @@
 use std::hint::black_box;
 
-use criterion::{criterion_group, criterion_main, BatchSize, Criterion};
+use criterion::{BatchSize, Criterion, criterion_group, criterion_main};
 
 use orderbook_modules::{
     order::{Order, Side},
@@ -107,8 +107,12 @@ fn benchmark_cancel_order(c: &mut Criterion) {
                 |mut book| {
                     // Cancel the last order.
                     //
-                    // With the current implementation this forces
-                    // cancel_order() to scan almost the entire book.
+                    // Vec implementation:
+                    // requires scanning the book to find the order.
+                    //
+                    // HashMap-index implementation:
+                    // finds the order's price level directly,
+                    // then searches only that price level.
                     black_box(book.cancel_order(size));
                 },
                 BatchSize::SmallInput,

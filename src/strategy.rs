@@ -35,7 +35,6 @@ impl MatchingStrategy for PriceTimeStrategy {
 
 //unit tests for strategy.rs
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -193,12 +192,7 @@ mod tests {
 
         let bid_price = book.best_bid().unwrap();
 
-        let remaining_bid = book
-            .bids
-            .get(&bid_price)
-            .unwrap()
-            .front()
-            .unwrap();
+        let remaining_bid = book.bids.get(&bid_price).unwrap().front().unwrap();
 
         assert_eq!(remaining_bid.id, 1);
         assert_eq!(remaining_bid.quantity, 5.0);
@@ -249,12 +243,7 @@ mod tests {
 
         let ask_price = book.best_ask().unwrap();
 
-        let remaining_ask = book
-            .asks
-            .get(&ask_price)
-            .unwrap()
-            .front()
-            .unwrap();
+        let remaining_ask = book.asks.get(&ask_price).unwrap().front().unwrap();
 
         assert_eq!(remaining_ask.id, 3);
     }

@@ -1,10 +1,7 @@
+use crate::orderbook::OrderError;
+use crate::{engine::ProcessResult, order::Order};
 use serde::Serialize;
 use tokio::sync::oneshot;
-use crate::orderbook::OrderError;
-use crate::{
-    engine::ProcessResult,
-    order::Order,
-};
 
 #[derive(Debug)]
 pub enum OrderCommand {
@@ -18,5 +15,4 @@ pub enum OrderCommand {
 pub enum OrderResponse {
     OrderProcessed(ProcessResult),
     OrderError(OrderError),
-
 }

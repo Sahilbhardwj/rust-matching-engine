@@ -19,7 +19,7 @@ struct AddOrderRequest {
 }
 
 #[tokio::main]
-async fn main()-> Result<(), Box<dyn std::error::Error>>{
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // ------------------------------------
     // MAIN MPSC CHANNEL
     //
@@ -41,16 +41,12 @@ async fn main()-> Result<(), Box<dyn std::error::Error>>{
     // TCP LISTENER
     // ------------------------------------
 
-    let listener = TcpListener::bind("127.0.0.1:9001")
-        .await?;
+    let listener = TcpListener::bind("127.0.0.1:9001").await?;
 
     println!("Server listening on ws://127.0.0.1:9001");
 
     loop {
-        let (stream, address) = listener
-            .accept()
-            .await
-            .unwrap();
+        let (stream, address) = listener.accept().await.unwrap();
 
         println!("Client connected: {}", address);
 
@@ -67,18 +63,12 @@ async fn main()-> Result<(), Box<dyn std::error::Error>>{
                 Ok(websocket) => websocket,
 
                 Err(error) => {
-                    println!(
-                        "WebSocket handshake failed: {}",
-                        error
-                    );
+                    println!("WebSocket handshake failed: {}", error);
                     return;
                 }
             };
 
-            println!(
-                "WebSocket established: {}",
-                address
-            );
+            println!("WebSocket established: {}", address);
 
             let (mut write, mut read) = websocket.split();
 
@@ -91,10 +81,7 @@ async fn main()-> Result<(), Box<dyn std::error::Error>>{
                     Ok(message) => message,
 
                     Err(error) => {
-                        println!(
-                            "WebSocket error: {}",
-                            error
-                        );
+                        println!("WebSocket error: {}", error);
                         break;
                     }
                 };
@@ -108,10 +95,7 @@ async fn main()-> Result<(), Box<dyn std::error::Error>>{
                     Ok(text) => text,
 
                     Err(error) => {
-                        println!(
-                            "Could not read message: {}",
-                            error
-                        );
+                        println!("Could not read message: {}", error);
                         continue;
                     }
                 };
@@ -122,18 +106,14 @@ async fn main()-> Result<(), Box<dyn std::error::Error>>{
                 // JSON → RUST REQUEST
                 // ------------------------------------
 
-                let request: AddOrderRequest =
-                    match serde_json::from_str(text) {
-                        Ok(request) => request,
+                let request: AddOrderRequest = match serde_json::from_str(text) {
+                    Ok(request) => request,
 
-                        Err(error) => {
-                            println!(
-                                "Invalid JSON: {}",
-                                error
-                            );
-                            continue;
-                        }
-                    };
+                    Err(error) => {
+                        println!("Invalid JSON: {}", error);
+                        continue;
+                    }
+                };
 
                 // ------------------------------------
                 // REQUEST → ORDER
@@ -150,8 +130,7 @@ async fn main()-> Result<(), Box<dyn std::error::Error>>{
                 // CREATE ONESHOT RESPONSE CHANNEL
                 // ------------------------------------
 
-                let (response_tx, response_rx) =
-                    tokio::sync::oneshot::channel();
+                let (response_tx, response_rx) = tokio::sync::oneshot::channel();
 
                 // ------------------------------------
                 // ORDER → ORDER COMMAND
@@ -179,62 +158,40 @@ async fn main()-> Result<(), Box<dyn std::error::Error>>{
                     Ok(response) => response,
 
                     Err(_) => {
-                        println!(
-                            "Processor dropped response channel"
-                        );
+                        println!("Processor dropped response channel");
                         break;
                     }
                 };
 
-                println!(
-                    "Processor response: {:?}",
-                    response
-                );
+                println!("Processor response: {:?}", response);
 
                 // ------------------------------------
                 // RESPONSE → JSON
                 // ------------------------------------
 
-                let json =
-                    match serde_json::to_string(&response) {
-                        Ok(json) => json,
+                let json = match serde_json::to_string(&response) {
+                    Ok(json) => json,
 
-                        Err(error) => {
-                            println!(
-                                "Failed to serialize response: {}",
-                                error
-                            );
-                            continue;
-                        }
-                    };
+                    Err(error) => {
+                        println!("Failed to serialize response: {}", error);
+                        continue;
+                    }
+                };
 
                 // ------------------------------------
                 // JSON → WEBSOCKET CLIENT
                 // ------------------------------------
 
-                if let Err(error) =
-                    write
-                        .send(
-                            tokio_tungstenite::tungstenite::Message::Text(
-                                json.into(),
-                            )
-                        )
-                        .await
+                if let Err(error) = write
+                    .send(tokio_tungstenite::tungstenite::Message::Text(json.into()))
+                    .await
                 {
-                    println!(
-                        "Failed to send response: {}",
-                        error
-                    );
+                    println!("Failed to send response: {}", error);
                     break;
                 }
             }
 
-            println!(
-                "Client disconnected: {}",
-                address
-            );
+            println!("Client disconnected: {}", address);
         });
-       
     }
-  
 }

@@ -1,9 +1,9 @@
-use serde::Serialize;
 use crate::order::{Order, Trade};
 use crate::orderbook::{OrderBook, OrderError};
 use crate::strategy::MatchingStrategy;
+use serde::Serialize;
 
-#[derive(Debug,Serialize)]
+#[derive(Debug, Serialize)]
 pub struct ProcessResult {
     pub order_id: u64,
     pub trades: Vec<Trade>,
@@ -22,7 +22,7 @@ impl MatchingEngine {
         }
     }
 
-    pub fn process_order(&mut self, order: Order) -> Result<ProcessResult, OrderError>{
+    pub fn process_order(&mut self, order: Order) -> Result<ProcessResult, OrderError> {
         let order_id = order.id;
 
         // Add incoming order to the book
@@ -31,13 +31,9 @@ impl MatchingEngine {
         // Let the selected strategy perform matching
         let trades = self.strategy.match_orders(&mut self.book);
 
-       Ok(ProcessResult {
-            order_id,
-            trades,
-        }) 
+        Ok(ProcessResult { order_id, trades })
     }
 }
-
 
 //unit tests for MatchingEngine
 #[cfg(test)]
@@ -143,13 +139,7 @@ mod tests {
         // Get the remaining order from the best bid price level
         let bid_price = engine.book.best_bid().unwrap();
 
-        let remaining_bid = engine
-            .book
-            .bids
-            .get(&bid_price)
-            .unwrap()
-            .front()
-            .unwrap();
+        let remaining_bid = engine.book.bids.get(&bid_price).unwrap().front().unwrap();
 
         assert_eq!(remaining_bid.id, 1);
         assert_eq!(remaining_bid.quantity, 5.0);
@@ -207,13 +197,7 @@ mod tests {
 
         let bid_price = engine.book.best_bid().unwrap();
 
-        let remaining_bid = engine
-            .book
-            .bids
-            .get(&bid_price)
-            .unwrap()
-            .front()
-            .unwrap();
+        let remaining_bid = engine.book.bids.get(&bid_price).unwrap().front().unwrap();
 
         assert_eq!(remaining_bid.id, 1);
         assert_eq!(remaining_bid.quantity, 3.0);
@@ -271,13 +255,7 @@ mod tests {
 
         let bid_price = engine.book.best_bid().unwrap();
 
-        let remaining_bid = engine
-            .book
-            .bids
-            .get(&bid_price)
-            .unwrap()
-            .front()
-            .unwrap();
+        let remaining_bid = engine.book.bids.get(&bid_price).unwrap().front().unwrap();
 
         assert_eq!(remaining_bid.id, 3);
     }
