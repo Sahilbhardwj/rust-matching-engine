@@ -5,3 +5,5 @@ pub mod orderbook;
 pub mod price;
 pub mod processor;
 pub mod strategy;
+pub mod metrics;
+pub mod engine_state;

@@ -86,41 +86,36 @@ fn benchmark_can_match(c: &mut Criterion) {
 }
 
 fn benchmark_cancel_order(c: &mut Criterion) {
-    for size in [1_000, 10_000, 100_000] {
-        c.bench_function(&format!("cancel_order_{}", size), |b| {
-            b.iter_batched(
-                || {
-                    let mut book = OrderBook::new();
+    for size in [1, 10, 100, 1_000, 10_000] {
+        c.bench_function(
+            &format!("cancel_order_queue_{}", size),
+            |b| {
+                b.iter_batched(
+                    || {
+                        let mut book = OrderBook::new();
 
-                    for id in 1..=size {
-                        book.add_order(Order {
-                            id,
-                            price: id as f64,
-                            quantity: 1.0,
-                            side: Side::Buy,
-                        })
-                        .unwrap();
-                    }
+                        for id in 1..=size {
+                            book.add_order(Order {
+                                id,
+                                price: 100.0,
+                                quantity: 1.0,
+                                side: Side::Buy,
+                            })
+                            .unwrap();
+                        }
 
-                    book
-                },
-                |mut book| {
-                    // Cancel the last order.
-                    //
-                    // Vec implementation:
-                    // requires scanning the book to find the order.
-                    //
-                    // HashMap-index implementation:
-                    // finds the order's price level directly,
-                    // then searches only that price level.
-                    black_box(book.cancel_order(size));
-                },
-                BatchSize::SmallInput,
-            );
-        });
+                        book
+                    },
+                    |mut book| {
+                        // Last order → forces the queue scan.
+                        black_box(book.cancel_order(size));
+                    },
+                    BatchSize::SmallInput,
+                );
+            },
+        );
     }
 }
-
 criterion_group!(
     benches,
     benchmark_best_bid,

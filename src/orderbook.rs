@@ -208,7 +208,9 @@ pub enum OrderError {
 
     #[error("Order quantity must be greater than zero")]
     InvalidQuantity,
-}
+    #[error("matching engine is not running")]
+    EngineNotRunning,
+    }
 
 // unit tests for the OrderBook struct and its methods using arrangement, action, and assertion (AAA) pattern
 
