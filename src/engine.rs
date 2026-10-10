@@ -73,7 +73,7 @@ mod tests {
     fn test_process_order_without_match() {
         let strategy = Box::new(PriceTimeStrategy);
         let mut engine = MatchingEngine::new(strategy);
-
+        assert!(engine.start());
         let order = Order {
             id: 1,
             price: 100.0,
@@ -94,7 +94,7 @@ mod tests {
     fn test_process_order_with_match() {
         let strategy = Box::new(PriceTimeStrategy);
         let mut engine = MatchingEngine::new(strategy);
-
+        assert!(engine.start());
         let buy_order = Order {
             id: 1,
             price: 100.0,
@@ -131,7 +131,7 @@ mod tests {
     fn test_process_order_partial_fill() {
         let strategy = Box::new(PriceTimeStrategy);
         let mut engine = MatchingEngine::new(strategy);
-
+        assert!(engine.start());
         let sell_order = Order {
             id: 2,
             price: 90.0,
@@ -176,7 +176,7 @@ mod tests {
     fn test_process_order_multiple_trades() {
         let strategy = Box::new(PriceTimeStrategy);
         let mut engine = MatchingEngine::new(strategy);
-
+        assert!(engine.start());
         // Existing sell orders
         engine
             .process_order(Order {
@@ -236,7 +236,7 @@ mod tests {
     fn test_process_order_invalid_orders() {
         let strategy = Box::new(PriceTimeStrategy);
         let mut engine = MatchingEngine::new(strategy);
-
+        assert!(engine.start());
         // Invalid price
         let result = engine.process_order(Order {
             id: 1,
@@ -291,7 +291,7 @@ mod tests {
 fn test_engine_metrics() {
     let strategy = Box::new(PriceTimeStrategy);
     let mut engine = MatchingEngine::new(strategy);
-
+    assert!(engine.start());
     engine
         .process_order(Order {
             id: 1,
@@ -318,7 +318,7 @@ fn test_engine_metrics() {
 fn test_metrics_can_be_read_concurrently() {
     let strategy = Box::new(PriceTimeStrategy);
     let mut engine = MatchingEngine::new(strategy);
-
+    assert!(engine.start());
     let metrics = engine.metrics();
     let reporter_metrics = Arc::clone(&metrics);
 
