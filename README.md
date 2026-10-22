@@ -164,22 +164,6 @@ response format configured by the current implementation.
 -   **Planned:** Recovery safely handles a truncated or corrupted final
     record.
 
-## Roadmap
-
--   [x] Introduce fixed-point `Price`.
--   [x] Migrate order and trade prices to `Price`.
--   [x] Introduce fixed-point `Quantity`.
--   [x] Migrate order and trade quantities to `Quantity`.
--   [ ] Verify all tests and remove unintended floating-point quantity
-    logic.
--   [ ] Expand matching correctness and order-book invariant tests.
--   [ ] Validate queue backpressure and graceful shutdown.
--   [ ] Add structured tracing and useful runtime metrics.
--   [ ] Add reproducible insertion, cancellation, and matching
-    benchmarks.
--   [ ] Implement a versioned append-only WAL.
--   [ ] Implement deterministic replay and crash-recovery tests.
--   [ ] Document the finalized WebSocket protocol.
 
 ## Design principles
 
