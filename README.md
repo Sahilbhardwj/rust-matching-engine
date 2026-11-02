@@ -127,8 +127,7 @@ Check the entry point and port configuration in `src/main.rs`, then run:
 cargo run
 ```
 
-Document the WebSocket address and response schema here once they are
-finalized in the implementation.
+
 
 ## Example order request
 
